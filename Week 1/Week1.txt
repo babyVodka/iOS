@@ -1,1 +1,37 @@
+//
+//  ContentView.swift
+//  HelloWorld
+//
+//  Created by May06 on 14/9/26.
+//
+
+import SwiftUI
+
+struct ContentView: View {
+    let name = "Minh Tam"
+    let ID = "SESEIU24023"
+    let message = "Im fine thank u and u"
+    var body: some View {
+        ZStack {
+            Color.mint
+            
+            VStack(spacing: 20) {
+                Image(systemName: "globe")
+                    .imageScale(.large)
+                    .foregroundStyle(.red)
+                Text("\(name)🧸ྀི")
+                Text("\(ID)")
+                Text("\(message)")
+            let khoi="🐕"
+                Text("\(khoi)")
+                
+            }
+            .padding()
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}
 
