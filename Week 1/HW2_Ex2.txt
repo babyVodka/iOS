@@ -62,7 +62,7 @@ struct ContentView: View {
                     
                     HStack {
                         Image(systemName: "star.fill")
-                        Text("GPA: \(gpa, specifier: "%.1f")")
+                        Text("GPA: \(gpa)")
                         Spacer()
                     }
                     
