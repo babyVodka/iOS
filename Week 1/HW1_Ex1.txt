@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-struct Untitled: View {
+struct ContentView: View {
     let name = "Mai Quoc Minh Tam"
     let studentID = "SESEIU24023"
     let age = 20
@@ -33,6 +33,14 @@ struct Untitled: View {
                     Text("GPA: \(GPA)")
                 }
                 Spacer()
+                
+                Text("Active")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(.blue)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(Color(red: 0.83, green: 0.96, blue: 0.88))
+                    .cornerRadius(12)
             }
             .padding()
         }
@@ -41,3 +49,4 @@ struct Untitled: View {
         }
     }
         
+
