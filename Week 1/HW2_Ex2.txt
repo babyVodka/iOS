@@ -78,7 +78,7 @@ struct ContentView: View {
                 Text("“\(motto)”")
                     .italic()
                     .padding()
-                
+                    .foregroundColor(Color.white)
                 Spacer()
                 
                 Button("Edit Profile") {
@@ -120,4 +120,3 @@ struct ContentView: View {
     }
 }
         
-
