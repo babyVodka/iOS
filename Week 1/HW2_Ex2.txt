@@ -1,0 +1,123 @@
+//
+//  Untitled.swift
+//  LabWeek1
+//
+//  Created by May06 on 18/9/26.
+//
+import SwiftUI
+
+struct ContentView: View {
+    
+    let name = "Mai Quoc Minh Tam"
+    let studentID = "SESEIU24023"
+    let age = 20
+    let gpa = 4
+    let motto = "I'm done"
+    let isStudent = true
+    
+    var body: some View {
+        
+        ZStack {
+            
+            Image("Image2")
+                .resizable()
+                
+                .ignoresSafeArea(edges: .all)
+            
+            Color.black.opacity(0.25)
+                .ignoresSafeArea(edges: .all)
+            
+            VStack {
+                
+                ZStack {
+                    RoundedRectangle(cornerRadius: 25)
+                        .fill(Color.blue)
+                        .frame(height: 180)
+                    
+                    VStack {
+                        Image(systemName: "person.circle.fill")
+                            .font(.system(size: 70))
+                            .foregroundColor(.white)
+                        
+                        Text(name)
+                            .font(.title)
+                            .bold()
+                            .foregroundColor(.white)
+                    }
+                }
+                
+                VStack(spacing: 15) {
+                    
+                    HStack {
+                        Image(systemName: "person.text.rectangle")
+                        Text("Student ID: \(studentID)")
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        Image(systemName: "calendar")
+                        Text("Age: \(age)")
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        Image(systemName: "star.fill")
+                        Text("GPA: \(gpa, specifier: "%.1f")")
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text(isStudent ? "Student / Active" : "Inactive")
+                        Spacer()
+                    }
+                }
+                .foregroundColor(Color.white)
+                .padding()
+                
+                Text("“\(motto)”")
+                    .italic()
+                    .padding()
+                
+                Spacer()
+                
+                Button("Edit Profile") {
+                    print("Edit Profile")
+                }
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+                
+                Spacer()
+                
+                HStack {
+                    
+                    VStack {
+                        Image(systemName: "person.fill")
+                        Text("Profile")
+                    }
+                    
+                    Spacer()
+                    
+                    VStack {
+                        Image(systemName: "book.fill")
+                        Text("Subjects")
+                    }
+                    
+                    Spacer()
+                    
+                    VStack {
+                        Image(systemName: "gearshape.fill")
+                        Text("Settings")
+                    }
+                }
+                .foregroundColor(Color.white)
+                .padding()
+            }
+            .padding()
+        }
+    }
+}
+        
+
