@@ -1,0 +1,43 @@
+//
+//  Untitled.swift
+//  LabWeek1
+//
+//  Created by May06 on 18/9/26.
+//
+
+import SwiftUI
+struct Untitled: View {
+    let name = "Mai Quoc Minh Tam"
+    let studentID = "SESEIU24023"
+    let age = 20
+    let GPA = 4
+    
+    var body: some View {
+        VStack{
+            
+            HStack{
+                
+                ZStack{
+                    Circle()
+                        .fill(Color.blue)
+                        .frame(width: 80, height: 80)
+                    Image(systemName: "person.fill")
+                        .foregroundStyle(Color.white)
+                        .font(.system(size: 35))
+                }
+                VStack(alignment: .leading){
+                    Text(name)
+                        .font(.title2.bold())
+                    Text("Student ID: \(studentID)")
+                    Text("Age: \(age)")
+                    Text("GPA: \(GPA)")
+                }
+                Spacer()
+            }
+            .padding()
+        }
+        .padding()
+            
+        }
+    }
+        
