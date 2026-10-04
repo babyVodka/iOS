@@ -1,0 +1,277 @@
+import SwiftUI
+
+struct ContentView: View {
+
+    @State private var computers: [String] = ["PC01", "PC02", "PC03", "PC04", "PC05"]
+
+    var body: some View {
+        TabView {
+            NavigationStack {
+                ComputerListView(computers: $computers)
+            }
+            .tabItem { Label("Home", systemImage: "desktopcomputer") }
+
+            NavigationStack {
+                CheckComputerView(computers: computers)
+            }
+            .tabItem { Label("Check", systemImage: "magnifyingglass") }
+
+            NavigationStack {
+                StatisticsView(computers: computers)
+            }
+            .tabItem { Label("Statistics", systemImage: "chart.bar.fill") }
+        }
+        .tint(.blue)
+    }
+}
+
+private struct ComputerListView: View {
+    @Binding var computers: [String]
+
+    var body: some View {
+        VStack(spacing: 0) {
+            LabHeader(
+                symbol: "desktopcomputer",
+                title: "Computer Lab",
+                subtitle: "Manage computers easily",
+                color: .blue
+            )
+
+            List {
+                if computers.isEmpty {
+                    Text("No computers yet. Tap Add Computer to begin.")
+                        .foregroundStyle(.secondary)
+                }
+
+                ForEach(computers, id: \.self) { computer in
+                    Label(computer, systemImage: "desktopcomputer")
+                        .padding(.vertical, 5)
+                }
+      
+                .onDelete { offsets in
+                    computers.remove(atOffsets: offsets)
+                }
+            }
+            .listStyle(.insetGrouped)
+
+            NavigationLink {
+                AddComputerView(computers: $computers)
+            } label: {
+                Label("Add Computer", systemImage: "plus")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 7)
+            }
+            .buttonStyle(.borderedProminent)
+            .padding(.horizontal)
+
+            Text("Total computers: \(computers.count)")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .padding()
+        }
+        .navigationTitle("Home")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar { EditButton() }
+    }
+}
+
+private struct AddComputerView: View {
+    @Binding var computers: [String]
+    @Environment(\.dismiss) private var dismiss
+    @State private var computerName = ""
+    @State private var showError = false
+    @State private var errorMessage = ""
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                LabHeader(
+                    symbol: "desktopcomputer",
+                    title: "Add Computer",
+                    subtitle: "Enter a new computer name",
+                    color: .blue
+                )
+
+                TextField("Computer name (e.g. PC06)", text: $computerName)
+                    .textFieldStyle(.roundedBorder)
+                    .textInputAutocapitalization(.characters)
+                    .autocorrectionDisabled()
+                    .submitLabel(.done)
+                    .onSubmit(addComputer)
+
+                Button(action: addComputer) {
+                    Text("Add")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 7)
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            .padding()
+        }
+        .navigationTitle("Add Computer")
+        .navigationBarTitleDisplayMode(.inline)
+        .alert("Cannot add computer", isPresented: $showError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(errorMessage)
+        }
+    }
+
+    private func addComputer() {
+        
+        let name = computerName.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+
+        guard !name.isEmpty else {
+            errorMessage = "Please enter a computer name."
+            showError = true
+            return
+        }
+
+        guard !computers.contains(name) else {
+            errorMessage = "\(name) already exists in the lab."
+            showError = true
+            return
+        }
+
+        computers.append(name)
+      
+        dismiss()
+    }
+}
+
+private struct CheckComputerView: View {
+    let computers: [String]
+    @State private var computerName = ""
+    @State private var checkedName: String?
+    @State private var showEmptyAlert = false
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                LabHeader(
+                    symbol: "magnifyingglass",
+                    title: "Check Computer",
+                    subtitle: "Find a computer in your lab",
+                    color: .green
+                )
+
+                TextField("Computer name (e.g. PC03)", text: $computerName)
+                    .textFieldStyle(.roundedBorder)
+                    .textInputAutocapitalization(.characters)
+                    .autocorrectionDisabled()
+                    .submitLabel(.search)
+                    .onSubmit(checkComputer)
+                    .onChange(of: computerName) { _ in
+                        checkedName = nil
+                    }
+
+                Button(action: checkComputer) {
+                    Text("Check")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 7)
+                }
+                .buttonStyle(.borderedProminent)
+
+                if let name = checkedName {
+                    let exists = computers.contains(name)
+                    Label(
+                        exists ? "\(name) is in the lab!" : "\(name) is not in the lab!",
+                        systemImage: exists ? "checkmark.circle.fill" : "xmark.circle.fill"
+                    )
+                    .foregroundStyle(exists ? Color.green : Color.red)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                    .background((exists ? Color.green : Color.red).opacity(0.1))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .accessibilityAddTraits(.updatesFrequently)
+                }
+            }
+            .padding()
+        }
+        .navigationTitle("Check Computer")
+        .navigationBarTitleDisplayMode(.inline)
+        .alert("Enter a name", isPresented: $showEmptyAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Please enter the computer name you want to check.")
+        }
+    }
+
+    private func checkComputer() {
+        let name = computerName.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        guard !name.isEmpty else {
+            checkedName = nil
+            showEmptyAlert = true
+            return
+        }
+        checkedName = name
+    }
+}
+
+private struct StatisticsView: View {
+    let computers: [String]
+
+    var body: some View {
+        List {
+            Section {
+                HStack(spacing: 18) {
+                    Image(systemName: "chart.bar.fill")
+                        .font(.largeTitle)
+                        .foregroundStyle(.orange)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Total Computers")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Text("\(computers.count)")
+                            .font(.largeTitle.bold())
+                    }
+                }
+                .padding(.vertical, 12)
+            }
+
+            Section("Computer List") {
+                if computers.isEmpty {
+                    Text("No computers in the lab.")
+                        .foregroundStyle(.secondary)
+                }
+                ForEach(computers, id: \.self) { computer in
+                    Label(computer, systemImage: "desktopcomputer")
+                }
+            }
+        }
+        .navigationTitle("Statistics")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct LabHeader: View {
+    let symbol: String
+    let title: String
+    let subtitle: String
+    let color: Color
+
+    var body: some View {
+        VStack(spacing: 10) {
+            Image(systemName: symbol)
+                .font(.system(size: 38))
+                .foregroundStyle(color)
+                .frame(width: 82, height: 82)
+                .background(color.opacity(0.1))
+                .clipShape(Circle())
+            Text(title)
+                .font(.title2.bold())
+            Text(subtitle)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .multilineTextAlignment(.center)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 20)
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
